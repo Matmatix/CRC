@@ -1,34 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXSIZE 100
+#define MAXSIZE 8
 
-char *intToBinary(int, char *,int);
+char *int2bin(int, char *,int);
 
 int main(void)
 {
-	char* binaryString;
+	char binaryString[MAXSIZE+1];
+	char appended[MAXSIZE+4];
+	binaryString[MAXSIZE - 1] = '\0';
 	char c;
-	int value, count;
+	int value = 0, count = 0;
 	printf("Enter an integer:\n");
 	while((c = getchar())!= '\n')
 	{
 			value = 10 * value + (c - '0');
 	}
+
 	printf("%d\n", value);
-	intToBinary(value,binaryString, MAXSIZE);
-	printf("%s",binaryString);
+	int2bin(value, binaryString, MAXSIZE);
+	int i;
+	for(i = 0; i < MAXSIZE; i++)
+	{
+		appended[i+3] = binaryString[i];
+	}
+	for(i = 0; i<3; i++)
+	{
+		appended[i] = '0';
+	}
+	printf("%s\n", binaryString);
+	printf("%s\n",appended);
+
 
 }
 
-char *intToBinary(int a, char *buffer,int buf_size)
-{
-	buffer += (buf_size - 1);
+char *int2bin(int a, char *buffer, int buf_size) {
+    buffer += (buf_size - 1);
 
-	for(int i = 31; i >= 0; i--)
-	{
-		*buffer-- = (a & 1) + '0';
-		a >>= 1;
-	}
-	return buffer;
+    for (int i = buf_size; i >= 0; i--) {
+        *buffer-- = ((a >> (buf_size-i))  & 1) + '0';
+    }
+
+    return buffer;
 }
