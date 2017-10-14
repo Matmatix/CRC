@@ -6,34 +6,45 @@
 
 char *int2bin(int, char *,int);
 
+char *bitStreamGen(int len);
 int main(void)
 {
 	// Binary string based off input integer
 	char binaryString[MAXSIZE+4];
-	int bi;
 	binaryString[MAXSIZE] = '\0';
 	char divisor[] = "1011";
 	// Value to append
 	char appended[] = "000";
+	int i = 0;
+
 	char c;
-	int value = 0, i = 0;
-	printf("Enter a binary string:\n");
-	// Takes in any integer up to maxsize bits
-	while((c = getchar())!= '\n')
+	printf("Type 0 if you want to insert a binary value\r\n");
+	printf("Type 1 if you want to get a random binary value\r\n");
+	c = getchar();
+	if(c == '1')
 	{
-			binaryString[i++] = c;
+		strcpy(binaryString, bitStreamGen(MAXSIZE));
+		printf("Your random value is %s\r\n", binaryString);
+		i = MAXSIZE;
 	}
+	else if(c == '0')
+	{
+		printf("Enter a binary string:\n");
+		// Takes in any integer up to maxsize bits
+	
+		while((c = getchar())!= '\n')
+		{
+			binaryString[i++] = c;
+		}
 
-	binaryString[i]='\0';
-
+		binaryString[i]='\0';
+		printf("The input value is: %s\n", binaryString);
+	}
 	if(i < sizeof(divisor))
 	{
 		printf("Binary string is too small.\n");
 		return 0;
 	}
-
-	printf("The input value is: %s\n", binaryString);
-	//int2bin(value, binaryString, MAXSIZE);
 
 	// Copy binaryString to larger array
 	strcat(binaryString, appended);
@@ -45,13 +56,11 @@ int main(void)
 		while(binaryString[j] == '0'){
 			j++;
 		}
-		printf("%c%c%c%c XOR %s\n", binaryString[j], binaryString[j+1], binaryString[j+2], binaryString[j+3],divisor);
-		binaryString[j] 	= (binaryString[j]-'0')^divisor[0];
-		binaryString[j+1] = (binaryString[j+1]-'0')^divisor[1];
-		binaryString[j+2] = (binaryString[j+2]-'0')^divisor[2];
-		binaryString[j+3] = (binaryString[j+3]-'0')^divisor[3];
-		//binaryString[j+4] = (binaryString[j+4]-'0')^divisor[4];
+		for(i = 0; i < (sizeof(divisor)); i++)
+		{
+			binaryString[j+i] 	= (binaryString[j+i]-'0')^divisor[i];
 		//printf("%s\n", binaryString);
+		}
 	}
 	printf("Final value: %s\n", binaryString);
 	return 0;
@@ -68,4 +77,18 @@ char *int2bin(int a, char *buffer, int buf_size) {
     }
 
     return buffer;
+}
+
+
+char *bitStreamGen(int len)
+{
+	char *output = malloc(len+1);
+	int i;
+	for(i = 0; i < len; i++)
+	{
+		output[i] = (rand() % 2) + '0';
+	}
+	output[len] = '\0';
+	return output;
+
 }
