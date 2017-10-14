@@ -7,20 +7,21 @@
 char *int2bin(int, char *,int);
 
 char *bitStreamGen(int len);
+int CRC(char binaryString[], int inLen, char divisor[], int divLen);
 int main(void)
 {
 	// Binary string based off input integer
 	char binaryString[MAXSIZE+4];
 	binaryString[MAXSIZE] = '\0';
 	char divisor[] = "1011";
-	// Value to append
-	char appended[] = "000";
-	int i = 0;
 
-	char c;
+	// Value to append
+	//char appended[] = "000";
+	
+	int i = 0;
 	printf("Type 0 if you want to insert a binary value\r\n");
 	printf("Type 1 if you want to get a random binary value\r\n");
-	c = getchar();
+	char c = getchar();
 	if(c == '1')
 	{
 		strcpy(binaryString, bitStreamGen(MAXSIZE));
@@ -31,37 +32,31 @@ int main(void)
 	{
 		printf("Enter a binary string:\n");
 		// Takes in any integer up to maxsize bits
-	
+
+		c = getchar();	
 		while((c = getchar())!= '\n')
 		{
+			//i servers as binaryString's length
 			binaryString[i++] = c;
 		}
 
 		binaryString[i]='\0';
 		printf("The input value is: %s\n", binaryString);
 	}
+	//Can't really check anything if smaller than divisor
 	if(i < sizeof(divisor))
 	{
 		printf("Binary string is too small.\n");
 		return 0;
 	}
 
-	// Copy binaryString to larger array
-	strcat(binaryString, appended);
-	printf("The appended binary string is: %s\n", binaryString);
+	// Do we need to append 000 like wikipedia? Looks like we don't
+	// From project summary 
+	//strcat(binaryString, appended);
+	//printf("The appended binary string is: %s\n", binaryString);
 
-	int j;
-	for(j=0; j< i-(sizeof(divisor)-1);j++)
-	{
-		while(binaryString[j] == '0'){
-			j++;
-		}
-		for(i = 0; i < (sizeof(divisor)); i++)
-		{
-			binaryString[j+i] 	= (binaryString[j+i]-'0')^divisor[i];
-		//printf("%s\n", binaryString);
-		}
-	}
+
+	CRC(binaryString, i, divisor, sizeof(divisor) - 1);
 	printf("Final value: %s\n", binaryString);
 	return 0;
 }
@@ -91,4 +86,44 @@ char *bitStreamGen(int len)
 	output[len] = '\0';
 	return output;
 
+}
+
+
+int CRC(char binaryString[], int inLen, char divisor[], int divLen)
+{
+	int i = 0;
+	int j = 0;
+	// Remove displayIndex 
+	int displayIndex = 0;
+	while(inLen-i >= divLen)
+	{
+		//Skip if at a zero
+		while(binaryString[i] == '0')
+			i++;
+		//Need a better solution for this
+		//Should I just use an infinite loop and rely on this check
+		//For exiting?
+		if(inLen - i < divLen)
+			break;
+		///* Used for display purpose only
+		printf("%s\r\n", binaryString);
+		displayIndex = 0;
+		while(displayIndex < i)
+		{
+			printf(" ");	
+			displayIndex++;
+		}
+		printf("%s\r\n", divisor, i, inLen, divLen);
+
+		//*/ Remove above section for good performance
+		// Run through each current val + next divLen spots
+		for(j = 0; j < divLen; j++)
+		{
+			
+			binaryString[j+i] = (binaryString[j+i] - '0') ^ divisor[j];
+		}
+		i++;
+	}
+
+	return 0;
 }
