@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 #define MAXSIZE 100
 
 char *int2bin(int, char *,int);
@@ -14,10 +14,10 @@ int main(void)
 	char binaryString[MAXSIZE+4];
 	binaryString[MAXSIZE] = '\0';
 	char divisor[] = "1011";
-
+	srand(time(NULL));
 	// Value to append
 	//char appended[] = "000";
-	
+
 	int i = 0;
 	printf("Type 0 if you want to insert a binary value\r\n");
 	printf("Type 1 if you want to get a random binary value\r\n");
@@ -33,7 +33,7 @@ int main(void)
 		printf("Enter a binary string:\n");
 		// Takes in any integer up to maxsize bits
 
-		c = getchar();	
+		c = getchar();
 		while((c = getchar())!= '\n')
 		{
 			//i servers as binaryString's length
@@ -51,7 +51,7 @@ int main(void)
 	}
 
 	// Do we need to append 000 like wikipedia? Looks like we don't
-	// From project summary 
+	// From project summary
 	//strcat(binaryString, appended);
 	//printf("The appended binary string is: %s\n", binaryString);
 
@@ -93,7 +93,7 @@ int CRC(char binaryString[], int inLen, char divisor[], int divLen)
 {
 	int i = 0;
 	int j = 0;
-	// Remove displayIndex 
+	// Remove displayIndex
 	int displayIndex = 0;
 	while(inLen-i >= divLen)
 	{
@@ -106,20 +106,20 @@ int CRC(char binaryString[], int inLen, char divisor[], int divLen)
 		if(inLen - i < divLen)
 			break;
 		///* Used for display purpose only
-		printf("%s\r\n", binaryString);
+		//printf("%s\r\n", binaryString);
 		displayIndex = 0;
 		while(displayIndex < i)
 		{
-			printf(" ");	
+			//printf(" ");
 			displayIndex++;
 		}
-		printf("%s\r\n", divisor, i, inLen, divLen);
+		//printf("%s\r\n", divisor, i, inLen, divLen);
 
 		//*/ Remove above section for good performance
 		// Run through each current val + next divLen spots
 		for(j = 0; j < divLen; j++)
 		{
-			
+
 			binaryString[j+i] = (binaryString[j+i] - '0') ^ divisor[j];
 		}
 		i++;
