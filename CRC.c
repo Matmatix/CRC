@@ -58,7 +58,7 @@ int main(void)
 	result = CRC(binaryString, i, divisor, sizeof(divisor) - 1);
 	printf("Final value: %s\n", result);
 	clock_t end = clock();
-	printf("%.10f\r\n", (double)(end - begin));
+	printf("%.3f ms\r\n", (double)(end - begin)*1000/CLOCKS_PER_SEC);
 	free(result);
 	return 0;
 }
@@ -85,7 +85,7 @@ char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 	char* result;
 	result = (char*) malloc(4);
 	result[3] = '\0';
-	// Remove displayIndex 
+	// Remove displayIndex
 	//int displayIndex = 0;
 	while(inLen-i >= divLen)
 	{
