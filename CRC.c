@@ -6,27 +6,39 @@
 #define MAXSIZE 200000
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen, char divisor[], int divLen);
+char* interface(int val);
 int main(void)
 {
 	// Binary string based off input integer
+	int i = 0;
+	char *result;
+
+	printf("How many times do you want this to run?\r\n");
+	for(i = 0; i < (getchar() - '0'); i++)
+	{
+		result = interface(1);
+		printf("%s is remainder\r\n", result);
+	}
+	free(result);
+}
+
+char* interface(int val)
+{
 	char binaryString[MAXSIZE+4];
 	char *result;
 	binaryString[MAXSIZE] = '\0';
 	char divisor[] = "10011";
 	srand(time(NULL));
-
-
 	int i = 0;
-	printf("Type 0 if you want to insert a binary value\r\n");
-	printf("Type 1 if you want to get a random binary value\r\n");
-	char c = getchar();
-	if(c == '1')
+
+	char c;
+	if(val == 1)
 	{
 		strcpy(binaryString, bitStreamGen(MAXSIZE));
 		printf("Your random value is %s\r\n", binaryString);
 		i = MAXSIZE;
 	}
-	else if(c == '0')
+	else if(val == 0)
 	{
 		printf("Enter a binary string:\n");
 		// Takes in any integer up to maxsize bits
@@ -48,19 +60,11 @@ int main(void)
 		return 0;
 	}
 
-	// Do we need to append 000 like wikipedia? Looks like we don't
-	// From project summary
-	//strcat(binaryString, appended);
-	//printf("The appended binary string is: %s\n", binaryString);
-
-
 	clock_t begin = clock();
 	result = CRC(binaryString, i, divisor, sizeof(divisor) - 1);
-	printf("Final value: %s\n", result);
 	clock_t end = clock();
 	printf("%.3f ms\r\n", (double)(end - begin)*1000/CLOCKS_PER_SEC);
-	free(result);
-	return 0;
+	return result; 
 }
 
 
