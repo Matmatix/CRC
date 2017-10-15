@@ -35,7 +35,6 @@ char* interface(int val)
 	if(val == 1)
 	{
 		strcpy(binaryString, bitStreamGen(MAXSIZE));
-		printf("Your random value is %s\r\n", binaryString);
 		i = MAXSIZE;
 	}
 	else if(val == 0)
@@ -89,6 +88,7 @@ char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 	char* result;
 	result = (char*) malloc(4);
 	result[3] = '\0';
+	printf("Running...");
 	// Remove displayIndex
 	//int displayIndex = 0;
 	while(inLen-i >= divLen)
@@ -124,6 +124,7 @@ char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 		}
 		i++;
 	}
+	printf("\r\n");
 	result[0] = binaryString[inLen-3];
 	result[1] = binaryString[inLen-2];
 	result[2] = binaryString[inLen-1];
