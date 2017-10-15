@@ -2,9 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 #define MAXSIZE 200000
-
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen, char divisor[], int divLen);
 int main(void)
@@ -16,7 +15,7 @@ int main(void)
 	char divisor[] = "10011";
 	srand(time(NULL));
 
-	
+
 	int i = 0;
 	printf("Type 0 if you want to insert a binary value\r\n");
 	printf("Type 1 if you want to get a random binary value\r\n");
@@ -32,7 +31,7 @@ int main(void)
 		printf("Enter a binary string:\n");
 		// Takes in any integer up to maxsize bits
 
-		c = getchar();	
+		c = getchar();
 		while((c = getchar())!= '\n')
 		{
 			//i servers as binaryString's length
@@ -48,6 +47,11 @@ int main(void)
 		printf("Binary string is too small.\n");
 		return 0;
 	}
+
+	// Do we need to append 000 like wikipedia? Looks like we don't
+	// From project summary
+	//strcat(binaryString, appended);
+	//printf("The appended binary string is: %s\n", binaryString);
 
 
 	clock_t begin = clock();
@@ -82,10 +86,10 @@ char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 	result = (char*) malloc(4);
 	result[3] = '\0';
 	// Remove displayIndex 
-	int displayIndex = 0;
+	//int displayIndex = 0;
 	while(inLen-i >= divLen)
 	{
-		
+
 		//Skip if at a zero
 		while(binaryString[i] == '0')
 			i++;
@@ -94,24 +98,24 @@ char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 		//For exiting?
 		if(inLen - i < divLen)
 			break;
-		// Used for display purpose only
-	/*	
-		printf("%s\r\n", binaryString);
+		///* Used for display purpose only
+		//printf("%s\r\n", binaryString);
+		/*
 		displayIndex = 0;
 		while(displayIndex < i)
 		{
-			printf(" ");	
+			//printf(" ");
 			displayIndex++;
 		}
 		printf("%s\r\n", divisor, i, inLen, divLen);
-	*/	
-		
+	*/
+
 
 		//*/ Remove above section for good performance
 		// Run through each current val + next divLen spots
 		for(j = 0; j < divLen; j++)
 		{
-			
+
 			binaryString[j+i] = (binaryString[j+i] - '0') ^ divisor[j];
 		}
 		i++;
