@@ -3,16 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXSIZE 200
+#define MAXSIZE 200000
 
-char *bitStreamGen(int len);
-int CRC(char binaryString[], int inLen, char divisor[], int divLen);
+char* bitStreamGen(int len);
+char* CRC(char binaryString[], int inLen, char divisor[], int divLen);
 int main(void)
 {
 	// Binary string based off input integer
 	char binaryString[MAXSIZE+4];
+	char *result;
 	binaryString[MAXSIZE] = '\0';
-	char divisor[] = "1011";
+	char divisor[] = "10011";
 	srand(time(NULL));
 
 	
@@ -49,8 +50,12 @@ int main(void)
 	}
 
 
-	CRC(binaryString, i, divisor, sizeof(divisor) - 1);
-	printf("Final value: %s\n", binaryString);
+	clock_t begin = clock();
+	result = CRC(binaryString, i, divisor, sizeof(divisor) - 1);
+	printf("Final value: %s\n", result);
+	clock_t end = clock();
+	printf("%.10f\r\n", (double)(end - begin));
+	free(result);
 	return 0;
 }
 
@@ -69,10 +74,13 @@ char *bitStreamGen(int len)
 }
 
 
-int CRC(char binaryString[], int inLen, char divisor[], int divLen)
+char* CRC(char binaryString[], int inLen, char divisor[], int divLen)
 {
 	int i = 0;
 	int j = 0;
+	char* result;
+	result = (char*) malloc(4);
+	result[3] = '\0';
 	// Remove displayIndex 
 	int displayIndex = 0;
 	while(inLen-i >= divLen)
@@ -108,6 +116,8 @@ int CRC(char binaryString[], int inLen, char divisor[], int divLen)
 		}
 		i++;
 	}
-
-	return 0;
+	result[0] = binaryString[inLen-3];
+	result[1] = binaryString[inLen-2];
+	result[2] = binaryString[inLen-1];
+	return result;
 }
