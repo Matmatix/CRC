@@ -3,15 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-typedef int bool;
-#define true 1
-#define false 0
 #define MAXSIZE 200
 char divisor[] = "10011";
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen);
 char* interface(char binaryString[]);
-bool checkSuccess(char binaryString[]);
+int checkSuccess(char binaryString[]);
 int main(void)
 {
 	// Binary string based off input integer
@@ -29,15 +26,11 @@ int main(void)
 		result = interface(binaryString);
 		printf("%s is remainder\r\n", result);
 		strcat(appendedString, result);
-		printf("%s is result\r\n", appendedString);
-		if(checkSuccess(appendedString) == true)
-		{
+		//printf("%s is result\r\n", appendedString);
+		if(checkSuccess(appendedString) == 0)
 			printf("Success!\r\n");
-		}
 		else
-		{
 			printf("Failure :(\r\n");
-		}
 	}
 	free(result);
 }
@@ -45,7 +38,7 @@ int main(void)
 char* interface(char binaryString[])
 {
 	char *result;
-	int i = 0;
+	int i = 0;	
 	i = MAXSIZE;
 	//Can't really check anything if smaller than divisor
 	if(i < sizeof(divisor))
@@ -71,24 +64,24 @@ char* CRC(char binaryString[], int inLen)
 	result = (char*) malloc(5);
 	result[4] = '\0';
 	// For display/testing purposes
-	int displayIndex = 0;
+	//int displayIndex = 0;
 	while(inLen-i >= divLen)
 	{
 		//Skip if at a zero
 		while(binaryString[i] == '0')
 			i++;
-		if(inLen - i < divLen)
+		if(inLen - i <= divLen)
 			break;
 		///* Used for display purpose only
-		printf("%s\r\n", binaryString);
+		//printf("%s\r\n", binaryString);
 		
-		displayIndex = 0;
-		while(displayIndex < i)
-		{
-			printf(" ");
-			displayIndex++;
-		}
-		printf("%s\r\n", divisor, i, inLen, divLen);
+		//displayIndex = 0;
+		//while(displayIndex < i)
+		//{
+		//	printf(" ");
+		//	displayIndex++;
+		//}
+		//printf("%s\r\n", divisor, i, inLen, divLen);
 	
 		//*/ Remove above section for good performance
 		// Run through each current val + next divLen spots
@@ -106,7 +99,7 @@ char* CRC(char binaryString[], int inLen)
 	result[3] = binaryString[inLen-1];
 	return result;
 }
-bool checkSuccess(char binaryString[])
+int checkSuccess(char binaryString[])
 {
 	char* result;
 	//result = (char*) malloc(5);
@@ -118,10 +111,10 @@ bool checkSuccess(char binaryString[])
 	inResult[1] = binaryString[MAXSIZE+1];
 	inResult[2] = binaryString[MAXSIZE+2];
 	inResult[3] = binaryString[MAXSIZE+3];
-	result = CRC(binaryString, (MAXSIZE - 3));
+	result = CRC(binaryString, (MAXSIZE));
 	printf("input: %s\r\n", inResult);
 	printf("output: %s\r\n", result);
-	return result[0] == binaryString[MAXSIZE-1];
+	return strcmp(result, inResult);
 }
 
 
