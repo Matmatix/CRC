@@ -5,6 +5,7 @@
 #include <time.h>
 #define MAXSIZE 200
 char divisor[] = "10011";
+char* table[512];
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen);
 char* interface(char binaryString[]);
