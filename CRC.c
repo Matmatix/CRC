@@ -3,55 +3,43 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#define MAXSIZE 200000
+#define MAXSIZE 200
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen, char divisor[], int divLen);
-char* interface(int val);
+char* interface(char binaryString[]);
 int main(void)
 {
 	// Binary string based off input integer
 	int i = 0;
 	char *result;
+	char binaryString[MAXSIZE + 1];
+	char appendedString[MAXSIZE + 1];	
 
-	printf("How many times do you want this to run?\r\n");
-	for(i = 0; i < (getchar() - '0'); i++)
+	srand(time(NULL));
+	for(i = 0; i < 1; i++)
 	{
-		result = interface(1);
+		strcpy(binaryString, bitStreamGen(MAXSIZE));
+		strcpy(appendedString, binaryString);
+		printf("%s\r\n", appendedString);
+		result = interface(binaryString);
 		printf("%s is remainder\r\n", result);
+		printf("%s\r\n", appendedString);
+		strcat(appendedString, result);
+		result = interface(appendedString);
+		printf("%s is remainder\r\n", result);
+
 	}
 	free(result);
 }
 
-char* interface(int val)
+char* interface(char binaryString[])
 {
-	char binaryString[MAXSIZE+4];
 	char *result;
-	binaryString[MAXSIZE] = '\0';
 	char divisor[] = "10011";
-	srand(time(NULL));
 	int i = 0;
 
-	char c;
-	if(val == 1)
-	{
-		strcpy(binaryString, bitStreamGen(MAXSIZE));
-		i = MAXSIZE;
-	}
-	else if(val == 0)
-	{
-		printf("Enter a binary string:\n");
-		// Takes in any integer up to maxsize bits
-
-		c = getchar();
-		while((c = getchar())!= '\n')
-		{
-			//i servers as binaryString's length
-			binaryString[i++] = c;
-		}
-
-		binaryString[i]='\0';
-		printf("The input value is: %s\n", binaryString);
-	}
+	strcpy(binaryString, bitStreamGen(MAXSIZE));
+	i = MAXSIZE;
 	//Can't really check anything if smaller than divisor
 	if(i < sizeof(divisor))
 	{
