@@ -5,11 +5,12 @@
 #include <time.h>
 #define MAXSIZE 200
 char divisor[] = "10011";
-char* table[512];
+char* table[256];
 char* bitStreamGen(int len);
 char* CRC(char binaryString[], int inLen);
 char* interface(char binaryString[]);
 int checkSuccess(char binaryString[]);
+int binToDec(char *bin);
 int main(void)
 {
 	// Binary string based off input integer
@@ -117,9 +118,43 @@ int checkSuccess(char binaryString[])
 	printf("output: %s\r\n", result);
 	return strcmp(result, inResult);
 }
+int binToDec(char *bin)
+{
+	int result = 0;
+	int i;
+	int poww = 1;
+	for(i = 0; i < 8; i++)
+	{
+		result = result + (bin[i] * poww);
+		poww *= 2;
+	}
+	return result;
+}
 
-
-
+void initTable(char divisor[])
+{
+	int i, j, k;
+	int currVal = 0;
+	//per table entry
+	for(i = 0; i < 256; i++)
+	{
+		table[i] = (char*)malloc(9);
+		table[i][8] = '\0';
+		//table[i] = divisor ^ i;
+		//make the string
+		//XOR string
+		
+		for(j = 0; j < 8; j++)
+		{
+			for(k = 0; k < 5; k++)
+			{
+				//binaryString[j+i] = (binaryString[j+i] - '0') ^ divisor[j];
+				table[i][j] = divisor[k] ^ (currVal & ( 1 << (j+k))) >> (j+k));
+			}
+		}
+		currVal += 256;
+	}
+}
 
 
 char *bitStreamGen(int len)
