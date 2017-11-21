@@ -4,30 +4,29 @@
 #include <string.h>
 #include <time.h>
 #define MAXSIZE 200
-char divisor[] = "10011";
+int divisor = 11;
 char* table[256];
-char* bitStreamGen(int len);
-char* CRC(char binaryString[], int inLen);
-char* interface(char binaryString[]);
+int bitStreamGen(int len);
+int CRC(char binaryString[], int inLen);
+int interface(char binaryString[]);
 int checkSuccess(char binaryString[]);
 int binToDec(char *bin);
 int main(void)
 {
 	// Binary string based off input integer
 	int i = 0;
-	char *result;
-	char binaryString[MAXSIZE + 1];
-	char appendedString[MAXSIZE + 5];	
+	int result;
+	int bitString;
+
 
 	srand(time(NULL));
 	for(i = 0; i < 1; i++)
 	{
-		strcpy(binaryString, bitStreamGen(MAXSIZE));
-		strcpy(appendedString, binaryString);
-		printf("%s\r\n", appendedString);
-		result = interface(binaryString);
-		printf("%s is remainder\r\n", result);
-		strcat(appendedString, result);
+		int bitString = bitStreamGen(MAXSIZE);
+		printf("%d\r\n", bitString);
+		result = interface(bitString);
+		printf("%d is remainder\r\n", result);
+		
 		//printf("%s is result\r\n", appendedString);
 		if(checkSuccess(appendedString) == 0)
 			printf("Success!\r\n");
@@ -37,40 +36,51 @@ int main(void)
 	free(result);
 }
 
-char* interface(char binaryString[])
+int interface(int binaryString)
 {
-	char *result;
+	int result;
 	int i = 0;	
-	i = MAXSIZE;
+	//i = MAXSIZE;
+	i = 10000;
 	//Can't really check anything if smaller than divisor
 	if(i < sizeof(divisor))
 	{
 		printf("Binary string is too small.\n");
 		return 0;
 	}
-
+	int count = bitCount(bitString);
 	clock_t begin = clock();
-	result = CRC(binaryString, i);
+	result = CRC(binaryString, count);
 	clock_t end = clock();
 	printf("%.3f ms\r\n", (double)(end - begin)*1000/CLOCKS_PER_SEC);
 	return result; 
 }
 
 
-char* CRC(char binaryString[], int inLen)
+ int bitCount(unsigned int n) {
+
+    int counter = 0;
+    while(n) {
+        counter += n % 2;
+        n >>= 1;
+    }
+    return counter;
+ }
+
+
+
+int CRC(int binaryString, int inLen)
 {
 	int i = 0;
 	int j = 0;
-	char* result;
-	int divLen = (sizeof(divisor) - 1);
-	result = (char*) malloc(5);
-	result[4] = '\0';
+	int result;
+	int divLen = 4;
 	// For display/testing purposes
 	//int displayIndex = 0;
 	while(inLen-i >= divLen)
 	{
 		//Skip if at a zero
-		while(binaryString[i] == '0')
+		while(((n & ( 1 << (inLen - i) )) >> (inLen - i)) == 0)
 			i++;
 		if(inLen - i <= divLen)
 			break;
@@ -157,15 +167,13 @@ void initTable(char divisor[])
 }
 
 
-char *bitStreamGen(int len)
+int bitStreamGen(int len)
 {
-	char *output = malloc(len+1);
-	int i;
-	for(i = 0; i < len; i++)
-	{
-		output[i] = (rand() % 2) + '0';
-	}
-	output[len] = '\0';
+	
+	srand (time(NULL));
+
+	/* generate secret number between 1 and 10: */
+	int output = rand() % 10000 + 1000;
 	return output;
 
 }
