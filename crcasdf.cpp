@@ -1,11 +1,11 @@
 #define POLYNOMIAL 0b1011  /* 11011 followed by 0's */
 #include <stdio.h>
 #include <cstdint>
-int bitCount(unsigned int n);
 int crc(int message, int length);
 int main()
 {
     printf("%x", crc(0b1010001010101010101110010101, 28));
+    printf("%x", crc(0b0011010111111101, 16));
 }
 int crc(int message, int length)
 {
@@ -42,6 +42,7 @@ int crc(int message, int length)
     /*
      * Return only the relevant bits of the remainder as CRC.
      */
-    return remainder;
+    printf("Shifting remainder <<: %x\n", message << 3 | remainder);
+    return message << 3 | remainder;
 
 }   /* crcNaive() */
