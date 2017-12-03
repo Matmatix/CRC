@@ -1,27 +1,26 @@
-
 #define POLYNOMIAL 0b1011  /* 11011 followed by 0's */
 #include <stdio.h>
+#include <cstdint>
 int bitCount(unsigned int n);
-int crcNaive(int message, int length);
+int crc(int message, int length);
 int main()
 {
-    printf("%x", crcNaive(0b00110101, 8));
+    printf("%x", crc(0b1010001010101010101110010101, 28));
 }
-int crcNaive(int message, int length)
+int crc(int message, int length)
 {
     int remainder;	
-
-
     /*
      * Initially, the dividend is the remainder.
      */
     remainder = message;
-    int poly = POLYNOMIAL << (length - 4);
+    uint64_t poly;
     /*
      * For each bit position in the message....
      */
-    for (int bit = length; bit > 0; --bit)
+    for (int bit = length; bit > 3; --bit)
     {
+        poly = POLYNOMIAL << (bit - 4);
         /*
          * If the uppermost bit is a 1...
          */
@@ -29,13 +28,12 @@ int crcNaive(int message, int length)
         {
             /*
              * XOR the previous remainder with the divisor.
-             */
+           1010 0010 1010 1010 1011 1001 0101 011  */
+           //0101 0001 0101 0101 0101 1100 1010 1011 
             remainder ^= poly;
-            printf("%x\n", remainder);
-            printf("%x\n", poly);
+            printf("Remainder: %x\n", remainder);
         }
-        poly >>= 1;
-
+        //printf("Polynomial %x\n", poly);
         /*
          * Shift the next bit of the message into the remainder.
          */
