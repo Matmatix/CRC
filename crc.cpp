@@ -2,6 +2,7 @@
 #include <bitset>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #define POLYNOMIAL 0b10011  /* 11011 followed by 0's */
 #define POLYLENGTH 5
 
@@ -14,15 +15,20 @@ int main()
 {
     int bitStream[1000];
     tableInit();
+    srand(time(NULL));
     for(int i = 0; i < 1000; i++)
     {
         bitStream[i] = rand();
+    }
+    clock();
+    clock_t begin = clock();
+    for(int i = 0; i < 1000; i++)
+    {
         printf("Input %x ---- ", bitStream[i]);
         printf("Table CRC %x\n", tableCRC(bitStream[i], 60));
     }
-    printf("Table CRC %x\n", tableCRC(0b1010001010101010101110010101, 28));
-    printf("Table CRC %x\n", tableCRC(0b0011010111111101, 16));
-    printf("%x\n", tableCRC(0b101010100011010111111101, 24));
+    clock_t end = clock();
+    printf("%.3f ms\n", (double) (end - begin) * 1000 / CLOCKS_PER_SEC);
 }
 // Extract b - a bits from message, starting at a where a is lsb and b is msb
 unsigned createMask(unsigned a, unsigned b, int message)
