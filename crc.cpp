@@ -2,6 +2,7 @@
 #include <bitset>
 #include <stdio.h>
 #define POLYNOMIAL 0b1011  /* 11011 followed by 0's */
+#define POLYLENGTH 4
 
 uint8_t crcTable[512];
 void tableInit();
@@ -37,16 +38,16 @@ void tableInit()
         remainder = message * 256;
         for(int bit = 16; bit > 8; --bit)
         {
-            poly = POLYNOMIAL << (bit - 4);
+            poly = POLYNOMIAL << (bit - POLYLENGTH);
             if(remainder & (1 << bit - 1))
             {
                 remainder ^= poly;
             }
     // Last byte needs to be CRC'd normally, so do a basic CRC for
     // each i
-            if((bit - 8) > 3)
+            if((bit - 8) > POLYLENGTH)
             {
-                poly = POLYNOMIAL << (bit - 4 - 8);
+                poly = POLYNOMIAL << (bit - POLYLENGTH - 8);
                 if(message & (1 << bit - 9))
                 {
                     message ^= poly;
@@ -71,5 +72,5 @@ int tableCRC(int message, int length)
         temp = crcTable[temp] ^ createMask(i - 8, i - 1, message);
         i -= 8;
     }while(i >= 8);
-    return message << 3 | crcTable[temp + 256];
+    return message << (POLYLENGTH - 1) | crcTable[temp + 256];
 }
