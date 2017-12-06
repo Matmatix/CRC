@@ -1,8 +1,9 @@
 #include <iostream>
 #include <bitset>
 #include <stdio.h>
-#define POLYNOMIAL 0b1011  /* 11011 followed by 0's */
-#define POLYLENGTH 4
+#include <stdlib.h>
+#define POLYNOMIAL 0b10011  /* 11011 followed by 0's */
+#define POLYLENGTH 5
 
 uint8_t crcTable[512];
 void tableInit();
@@ -11,7 +12,14 @@ unsigned createMask(unsigned a, unsigned b, int message);
 using namespace std;
 int main()
 {
+    int bitStream[1000];
     tableInit();
+    for(int i = 0; i < 1000; i++)
+    {
+        bitStream[i] = rand();
+        printf("Input %x ---- ", bitStream[i]);
+        printf("Table CRC %x\n", tableCRC(bitStream[i], 60));
+    }
     printf("Table CRC %x\n", tableCRC(0b1010001010101010101110010101, 28));
     printf("Table CRC %x\n", tableCRC(0b0011010111111101, 16));
     printf("%x\n", tableCRC(0b101010100011010111111101, 24));
@@ -43,18 +51,18 @@ void tableInit()
             {
                 remainder ^= poly;
             }
-    // Last byte needs to be CRC'd normally, so do a basic CRC for
-    // each i
-            if((bit - 8) > POLYLENGTH)
+            // Last byte needs to be CRC'd normally, so do a basic CRC for
+            // each i
+            if((bit - 7) > POLYLENGTH)
             {
                 poly = POLYNOMIAL << (bit - POLYLENGTH - 8);
-                if(message & (1 << bit - 9))
+                if(message & (1 << (bit - 9)))
                 {
                     message ^= poly;
                 }
             }
         }
-    // Store main table in i, but last byte stuff in i + 256 to keep out of way
+        // Store main table in i, but last byte stuff in i + 256 to keep out of way
         crcTable[i] = remainder;
         crcTable[i + 256] = message;
     }
@@ -72,5 +80,5 @@ int tableCRC(int message, int length)
         temp = crcTable[temp] ^ createMask(i - 8, i - 1, message);
         i -= 8;
     }while(i >= 8);
-    return message << (POLYLENGTH - 1) | crcTable[temp + 256];
+    return crcTable[temp + 256];
 }
